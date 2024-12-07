@@ -1,0 +1,26 @@
+# Node.js
+/node_modules
+/dist
+/build
+/.env
+
+# Logs
+*.log
+
+# npm package-lock files
+package-lock.json
+yarn.lock
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE files
+.vscode/
+.idea/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Prisma
+prisma/migrations/
