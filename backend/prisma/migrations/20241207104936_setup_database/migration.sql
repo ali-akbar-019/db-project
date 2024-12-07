@@ -1,0 +1,98 @@
+-- CreateTable
+CREATE TABLE `User` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `auth0Id` VARCHAR(191) NOT NULL,
+    `addressLine1` VARCHAR(191) NOT NULL,
+    `city` VARCHAR(191) NOT NULL,
+    `country` VARCHAR(191) NOT NULL,
+    `phone` VARCHAR(15) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `isProfileSetup` BOOLEAN NOT NULL DEFAULT false,
+
+    UNIQUE INDEX `User_email_key`(`email`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Product` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(100) NOT NULL,
+    `brand` VARCHAR(50) NOT NULL,
+    `category` ENUM('ELECTRONICS', 'FASHION', 'HOME_APPLIANCES', 'BOOKS', 'BEAUTY', 'SPORTS', 'TOYS', 'GROCERIES', 'AUTOMOTIVE', 'PET_SUPPLIES', 'HEALTH', 'JEWELRY', 'OFFICE_SUPPLIES', 'OUTDOOR', 'GARDENING') NOT NULL,
+    `gender` ENUM('MALE', 'FEMALE', 'BOTH') NOT NULL,
+    `description` VARCHAR(191) NULL,
+    `price` DOUBLE NOT NULL,
+    `discountPrice` DOUBLE NULL,
+    `stock` INTEGER NOT NULL DEFAULT 0,
+    `isAvailable` BOOLEAN NOT NULL DEFAULT true,
+    `rating` DOUBLE NOT NULL DEFAULT 0,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Image` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `url` TEXT NOT NULL,
+    `altText` VARCHAR(191) NULL,
+    `productId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `CartItem` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `userId` INTEGER NOT NULL,
+    `productId` INTEGER NOT NULL,
+    `orderId` INTEGER NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Order` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `userId` INTEGER NOT NULL,
+    `deliveryDetails` JSON NOT NULL,
+    `totalAmount` DOUBLE NOT NULL DEFAULT 0.0,
+    `status` ENUM('PLACED', 'PAID', 'IN_PROGRESS', 'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED') NOT NULL DEFAULT 'PLACED',
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Fav` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `userId` INTEGER NOT NULL,
+    `productId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Image` ADD CONSTRAINT `Image_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `CartItem` ADD CONSTRAINT `CartItem_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `CartItem` ADD CONSTRAINT `CartItem_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `CartItem` ADD CONSTRAINT `CartItem_orderId_fkey` FOREIGN KEY (`orderId`) REFERENCES `Order`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Order` ADD CONSTRAINT `Order_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Fav` ADD CONSTRAINT `Fav_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Fav` ADD CONSTRAINT `Fav_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

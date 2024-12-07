@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int        @id @default(autoincrement())
+  name           String
+  email          String     @unique
+  auth0Id        String
+  addressLine1   String
+  city           String
+  country        String
+  phone          String     @db.VarChar(15)
+  createdAt      DateTime   @default(now())
+  isProfileSetup Boolean    @default(false)
+  Cart           CartItem[]
+  Order          Order[]
+  Fav            Fav[]
+}
+
+model Product {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(100)
+  brand         String   @db.VarChar(50)
+  category      Category
+  gender        Gender
+  description   String?
+  price         Float
+  discountPrice Float?
+  stock         Int      @default(0)
+  isAvailable   Boolean  @default(true)
+  rating        Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  images Image[]
+  Cart   CartItem[]
+  Fav    Fav[]
+}
+
+model Image {
+  id        Int     @id @default(autoincrement())
+  url       String  @db.Text
+  altText   String?
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+  userId    Int
+  productId Int
+  Order     Order?  @relation(fields: [orderId], references: [id])
+  orderId   Int?
+}
+
+model Order {
+  id              Int         @id @default(autoincrement())
+  userId          Int
+  user            User        @relation(fields: [userId], references: [id])
+  deliveryDetails Json // Delivery details stored as JSON
+  cartItems       CartItem[]
+  totalAmount     Float       @default(0.0)
+  status          OrderStatus @default(PLACED)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model Fav {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  productId Int
+  user      User    @relation(fields: [userId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+enum Category {
+  ELECTRONICS
+  FASHION
+  HOME_APPLIANCES
+  BOOKS
+  BEAUTY
+  SPORTS
+  TOYS
+  GROCERIES
+  AUTOMOTIVE
+  PET_SUPPLIES
+  HEALTH
+  JEWELRY
+  OFFICE_SUPPLIES
+  OUTDOOR
+  GARDENING
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  BOTH
+}
+
+enum OrderStatus {
+  PLACED
+  PAID
+  IN_PROGRESS
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
