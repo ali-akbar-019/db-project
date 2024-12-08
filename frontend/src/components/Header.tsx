@@ -1,6 +1,3 @@
-import { Heart, Search, ShoppingCart } from "lucide-react";
-import { Link } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +6,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Heart, Search, ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+//
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { AspectRatio } from "./ui/aspect-ratio";
+
 const Header = () => {
   const link = [
     {
@@ -32,6 +43,8 @@ const Header = () => {
       url: "/contact",
     },
   ];
+
+  let isEmpty = true;
   return (
     <header className="shadow-sm">
       <nav className="flex items-center justify-between p-5 px-10 md:px-20 lg:px-24">
@@ -53,9 +66,39 @@ const Header = () => {
             <Heart className="w-5 h-5" />
           </span>
 
-          <span>
-            <ShoppingCart className="w-5 h-5" />
-          </span>
+          <Sheet>
+            <SheetTrigger>
+              <ShoppingCart className="w-5 h-5" />
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>
+                  Welcome to
+                  <span className="ms-1 font-bold tracking-tighter ">
+                    Shop<span className="text-red-600">Ease</span>
+                  </span>
+                </SheetTitle>
+                <SheetDescription className="  flex items-center justify-center flex-col overflow-hidden">
+                  {isEmpty ? (
+                    <>
+                      <div className="w-full h-full mt-[200px]">
+                        <AspectRatio ratio={16 / 12}>
+                          <img
+                            src="/imgs/hippo-empty-cart.png"
+                            alt="image"
+                            className="w-full h-full object-cover -mt-10"
+                          />
+                        </AspectRatio>
+                        <p className="text-center">Cart is Empty</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>not empty</>
+                  )}
+                </SheetDescription>
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
 
           <DropdownMenu>
             <DropdownMenuTrigger className="">

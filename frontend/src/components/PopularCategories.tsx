@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 const PopularCategories = ({ className }: { className?: string }) => {
   return (
@@ -10,37 +11,47 @@ const PopularCategories = ({ className }: { className?: string }) => {
         {/*  */}
         <div className="mt-5" />
         <div className="grid grid-cols-3 gap-2 h-[600px] overflow-hidden">
-          <div className="col-span-2 overflow-hidden rounded-xl relative">
-            <img
-              src="/categories/shoes_03.webp"
-              alt="shoes image"
-              className=" w-full object-cover h-full"
-            />
-            <div className="absolute top-5 left-5 flex flex-col">
-              <strong className="text-base lg:text-lg">
-                Clothes and shoes
-              </strong>
-              <small className="text-gray-500">254 items</small>
-            </div>
-          </div>
-          <div className="col-span-1  flex flex-col gap-2">
-            <div className="overflow-hidden rounded-xl relative h-full">
+          <Link
+            className="col-span-2 overflow-hidden rounded-xl relative"
+            to={"/categories/cat"}
+          >
+            <div>
               <img
-                src="/categories/laptop_01.webp"
-                alt="Electronics"
+                src="/categories/shoes_03.webp"
+                alt="shoes image"
                 className=" w-full object-cover h-full"
               />
+              <div className="absolute top-5 left-5 flex flex-col">
+                <strong className="text-base lg:text-lg">
+                  Clothes and shoes
+                </strong>
+                <small className="text-gray-500">254 items</small>
+              </div>
+            </div>
+          </Link>
+          <div className="col-span-1  flex flex-col gap-2">
+            <div className="overflow-hidden rounded-xl relative h-full">
+              <Link to={"/categories/cat"}>
+                <img
+                  src="/categories/laptop_01.webp"
+                  alt="Electronics"
+                  className=" w-full object-cover h-full"
+                />
+              </Link>
               <div className="absolute top-5 left-5 flex flex-col">
                 <strong className="text-base lg:text-lg">Electronics</strong>
                 <small className="text-gray-500">173 items</small>
               </div>
             </div>
             <div className="overflow-hidden rounded-xl relative h-full">
-              <img
-                src="/categories/tennis_01.jpg"
-                alt="sports image"
-                className=" w-full object-cover h-full"
-              />
+              <Link to={"/categories/cat"}>
+                <img
+                  src="/categories/tennis_01.jpg"
+                  alt="sports image"
+                  className=" w-full object-cover h-full"
+                />
+              </Link>
+
               <div className="absolute top-5 left-5 flex flex-col">
                 <strong className="text-base lg:text-lg">Sports goods</strong>
                 <small className="text-gray-500">123 items</small>
@@ -53,11 +64,13 @@ const PopularCategories = ({ className }: { className?: string }) => {
         <div className="grid grid-cols-3 gap-2 h-[600px] overflow-hidden">
           <div className="col-span-1  flex flex-col gap-2 h-[600px]">
             <div className="overflow-hidden rounded-xl relative ">
-              <img
-                src="/categories/toys_03.jpg"
-                alt="childrens goods"
-                className=" w-full object-cover h-full"
-              />
+              <Link to={"/categories/cat"}>
+                <img
+                  src="/categories/toys_03.jpg"
+                  alt="childrens goods"
+                  className=" w-full object-cover h-full"
+                />
+              </Link>
               <div className="absolute top-5 left-5 flex flex-col">
                 <strong className="text-base lg:text-lg">
                   Children's goods
@@ -66,11 +79,14 @@ const PopularCategories = ({ className }: { className?: string }) => {
               </div>
             </div>
             <div className="overflow-hidden rounded-xl relative h-full">
-              <img
-                src="/categories/beauty_02.png"
-                alt="Beauty"
-                className=" w-full object-cover h-full"
-              />
+              <Link to={"/categories/cat"}>
+                <img
+                  src="/categories/beauty_02.png"
+                  alt="Beauty"
+                  className=" w-full object-cover h-full"
+                />
+              </Link>
+
               <div className="absolute top-5 left-5 flex flex-col">
                 <strong className="text-base lg:text-lg">Beauty</strong>
                 <small className="text-gray-500">321 items</small>
@@ -78,11 +94,13 @@ const PopularCategories = ({ className }: { className?: string }) => {
             </div>
           </div>
           <div className="col-span-2 overflow-hidden rounded-xl relative h-[600px]">
-            <img
-              src="/categories/sofa_05.jfif"
-              alt="furniture image"
-              className=" w-full object-cover h-full"
-            />
+            <Link to={"/categories/cat"}>
+              <img
+                src="/categories/sofa_05.jfif"
+                alt="furniture image"
+                className=" w-full object-cover h-full"
+              />
+            </Link>
             <div className="absolute top-5 left-5 flex flex-col">
               <strong className="text-base lg:text-lg">Furniture</strong>
               <small className="text-gray-500">123 items</small>

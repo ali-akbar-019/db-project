@@ -75,7 +75,7 @@ const Footer = () => {
             <img
               src="/download_01.png"
               alt="download image"
-              className="w-full h-full object-cover max-w-[300px]"
+              className="w-full h-full object-cover max-w-[250px]"
             />
           </div>
         </div>

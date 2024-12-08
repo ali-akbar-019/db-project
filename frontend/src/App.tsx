@@ -8,6 +8,8 @@ import SingleProductPage from "./page/SingleProductPage";
 import BillingPage from "./page/BillingPage";
 import AdminHomePage from "./page/Admin/HomePage";
 import { Layout } from "./layouts/Layout";
+import Categories from "./page/Categories";
+import SingleCategoryPage from "./page/SingleCategoryPage";
 
 const App = () => {
   return (
@@ -43,6 +45,22 @@ const App = () => {
             element={
               <Layout>
                 <ProductsPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/categories"
+            element={
+              <Layout>
+                <Categories />
+              </Layout>
+            }
+          />
+          <Route
+            path="/categories/:cat"
+            element={
+              <Layout>
+                <SingleCategoryPage />
               </Layout>
             }
           />
