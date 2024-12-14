@@ -110,9 +110,16 @@ const Header = () => {
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Admin</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to={"/profile"}>Profile</Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <Link to={"/billing"}>Billing</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to={"/admin"}>Admin</Link>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

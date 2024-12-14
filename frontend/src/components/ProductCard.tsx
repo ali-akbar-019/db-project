@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Heart, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ProductCard = ({
   className,
@@ -12,11 +13,13 @@ const ProductCard = ({
     <div className={cn("", className)}>
       {/* image */}
       <div className="relative  ">
-        <img
-          src="/imgs/horizontal_06.jpg"
-          alt={title ? title : "image of the product "}
-          className="w-full h-full object-cover rounded-lg cursor-pointer"
-        />
+        <Link to={"/products/id"}>
+          <img
+            src="/imgs/horizontal_06.jpg"
+            alt={title ? title : "image of the product "}
+            className="w-full h-full object-cover rounded-lg cursor-pointer"
+          />
+        </Link>
 
         <span className="bg-gray-100 absolute top-3 right-5 p-2 rounded-full flex items-center justify-center cursor-pointer">
           <Heart className="w-5 h-5 text-gray-600" />
