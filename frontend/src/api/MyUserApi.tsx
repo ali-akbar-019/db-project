@@ -1,11 +1,12 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { CheckoutSessionData } from "@/utils/Types";
+import { useAuth0, User } from "@auth0/auth0-react";
 import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const useCreateMyUser = () => {
   const { getAccessTokenSilently } = useAuth0();
-  const createMyUserRequest = async (user: any) => {
+  const createMyUserRequest = async (user: CheckoutSessionData) => {
     const accessToken = await getAccessTokenSilently();
     const res = await fetch(`${API_BASE_URL}/api/user`, {
       method: "POST",
@@ -43,30 +44,40 @@ const useCreateMyUser = () => {
 
 const useGetMyUser = () => {
   const { getAccessTokenSilently } = useAuth0();
+
   const getMyUserRequest = async () => {
-    const accessToken = getAccessTokenSilently();
-    const res = await fetch(`${API_BASE_URL}/api/user`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "content-type": "application/json",
-      },
-    });
-    //
-    if (!res.ok) {
-      throw new Error("Failed to Get  the user");
+    try {
+      // Wait for the access token
+      const accessToken = await getAccessTokenSilently();
+
+      const res = await fetch(`${API_BASE_URL}/api/user`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to get the user");
+      }
+
+      return await res.json(); // Return the user data
+    } catch (error) {
+      throw error;
     }
   };
-  //
+
   const {
     data: currentUser,
     isLoading,
     error,
   } = useQuery("fetchCurrentUser", getMyUserRequest);
-  //
+
   if (error) {
     toast.error(error.toString());
   }
+
   return {
     currentUser,
     isLoading,
@@ -75,7 +86,7 @@ const useGetMyUser = () => {
 
 const useUpdateMyUser = () => {
   const { getAccessTokenSilently } = useAuth0();
-  const updateMyUserRequest = async (updatedUserData: any) => {
+  const updateMyUserRequest = async (updatedUserData: CheckoutSessionData) => {
     const accessToken = await getAccessTokenSilently();
     const req = await fetch(`${API_BASE_URL}/api/user`, {
       method: "PUT",
@@ -100,6 +111,7 @@ const useUpdateMyUser = () => {
   } = useMutation(updateMyUserRequest);
   if (isSuccess) {
     toast.success("Updated Successfully");
+    reset();
   } else if (error) {
     toast.error(error.toString());
     reset();
@@ -110,4 +122,37 @@ const useUpdateMyUser = () => {
   };
 };
 
-export { useCreateMyUser, useGetMyUser, useUpdateMyUser };
+const useGetAllUsers = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const getAllUsersRequest = async (): Promise<User[]> => {
+    const accessToken = await getAccessTokenSilently();
+    const res = await fetch(`${API_BASE_URL}/api/user/get-all-users`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "content-type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Failed to create the user");
+    }
+    const data: User[] = await res.json();
+    return data;
+  };
+  //
+  const {
+    data: allUsers,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useQuery("fetchAllUsers", getAllUsersRequest);
+  return {
+    allUsers,
+    isLoading,
+    isError,
+    isSuccess,
+  };
+};
+
+export { useCreateMyUser, useGetMyUser, useUpdateMyUser, useGetAllUsers };

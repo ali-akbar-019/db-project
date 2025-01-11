@@ -1,0 +1,6 @@
+homepage of admin
+fav products check
+orders add del check
+
+resposnive kar do
+images change kar do

@@ -4,6 +4,7 @@ import {
   LogOut,
   Settings,
   ShoppingBasket,
+  Truck,
   UsersRound,
 } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
@@ -27,6 +28,11 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
       name: "Customers",
       link: "/admin/customers",
       icon: UsersRound,
+    },
+    {
+      name: "Orders",
+      link: "/admin/orders",
+      icon: Truck,
     },
     {
       name: "Visuals",

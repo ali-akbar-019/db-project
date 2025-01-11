@@ -1,22 +1,119 @@
+// @ts-nocheck
+import { useGetAllOrders } from "@/api/orderApi";
+import { useGetAllProducts } from "@/api/productsApi";
 import SmallCustomerCard from "@/components/SmallCustomerCard";
 import { Separator } from "@/components/ui/separator";
 import { ChartColumn } from "lucide-react";
 import { useEffect, useState } from "react";
 import DateObject from "react-date-object";
+import { Link } from "react-router-dom";
 import {
-  BarChart,
   Bar,
+  BarChart,
   CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  LineChart,
-  Line,
 } from "recharts";
 
 const HomePage = () => {
+  //
+  const { data: allProducts, isLoading: allProductsLoading } =
+    useGetAllProducts();
+  //
+  const { orders, isLoading: ordersLoading } = useGetAllOrders();
+  const [allData, setAllData] = useState({
+    totalProducts: 0,
+    ordersInfo: {
+      totalOrders: 0,
+      totalEarned: 0,
+      cancelled: 0,
+      placed: 0,
+      sold: 0,
+    },
+    charts: {
+      chartData: [],
+      linechartData: [],
+    },
+  });
+
+  const generateChartData = (orders) => {
+    // Calculate frequency of orders in specific totalAmount ranges
+    const ranges = [
+      { range: "0-10", min: 0, max: 1000 },
+      { range: "10-20", min: 1000, max: 2000 },
+      { range: "20-30", min: 2000, max: 30000 },
+      { range: "30-40", min: 30000, max: 4000 },
+      { range: "40-50", min: 4000, max: 5000 },
+      { range: "50-60", min: 5000, max: 6000 },
+    ];
+    const chartData = ranges.map((r) => ({
+      range: r.range,
+      frequency: orders.filter(
+        (order) => order.totalAmount >= r.min && order.totalAmount < r.max
+      ).length,
+    }));
+
+    return chartData;
+  };
+
+  const generateLineChartData = (orders) => {
+    // Group orders by month
+    const monthMap = {
+      0: "Jan",
+      1: "Feb",
+      2: "Mar",
+      3: "Apr",
+      4: "May",
+      5: "Jun",
+      6: "Jul",
+      7: "Aug",
+      8: "Sep",
+      9: "Oct",
+      10: "Nov",
+      11: "Dec",
+    };
+
+    const monthlyData = orders.reduce((acc, order) => {
+      const month = new Date(order.createdAt).getMonth();
+      if (!acc[month]) acc[month] = 0;
+      acc[month] += order.totalAmount;
+      return acc;
+    }, {});
+
+    const linechartData = Object.keys(monthlyData).map((month) => ({
+      month: monthMap[month],
+      value: monthlyData[month],
+    }));
+
+    return linechartData;
+  };
+
+  useEffect(() => {
+    if (!allProductsLoading && !ordersLoading && orders && allProducts) {
+      setAllData((prev) => ({
+        totalProducts: allProducts?.products?.length,
+        ordersInfo: {
+          totalOrders: orders.length,
+          totalEarned: orders.reduce((acc, curr) => acc + curr.totalAmount, 0),
+          cancelled: orders.filter((order) => order.status === "CANCELLED")
+            .length,
+          placed: orders.filter((order) => order.status === "PLACED").length,
+          sold: orders.filter((order) => order.status === "PAID").length,
+        },
+        charts: {
+          chartData: generateChartData(orders),
+          linechartData: generateLineChartData(orders),
+        },
+      }));
+    }
+  }, [orders, allProducts, allProductsLoading, ordersLoading]);
+
+  //
   const [formatedDate, setFormatedDate] = useState({
     year: "",
     day: "",
@@ -36,7 +133,7 @@ const HomePage = () => {
       };
     });
     //
-    console.log(formatedDate);
+    // console.log(formatedDate);
   }, [date.day]);
   //
   if (formatedDate.year === "") {
@@ -50,26 +147,27 @@ const HomePage = () => {
     });
     //
   }
-  //
-  const chartData = [
-    { range: "0-10", frequency: 20 },
-    { range: "10-20", frequency: 45 },
-    { range: "20-30", frequency: 35 },
-    { range: "30-40", frequency: 60 },
-    { range: "40-50", frequency: 50 },
-    { range: "50-60", frequency: 30 },
-  ];
+  console.log("charts :: ", allData.charts);
+  // //
+  // const chartData = [
+  //   { range: "0-10", frequency: 20 },
+  //   { range: "10-20", frequency: 45 },
+  //   { range: "20-30", frequency: 35 },
+  //   { range: "30-40", frequency: 60 },
+  //   { range: "40-50", frequency: 50 },
+  //   { range: "50-60", frequency: 30 },
+  // ];
 
-  const linechartData = [
-    { month: "Jan", value: 400 },
-    { month: "Feb", value: 300 },
-    { month: "Mar", value: 200 },
-    { month: "Apr", value: 278 },
-    { month: "May", value: 189 },
-    { month: "Jun", value: 239 },
-    { month: "Jul", value: 349 },
-    { month: "Aug", value: 420 },
-  ];
+  // const linechartData = [
+  //   { month: "Jan", value: 400 },
+  //   { month: "Feb", value: 300 },
+  //   { month: "Mar", value: 200 },
+  //   { month: "Apr", value: 278 },
+  //   { month: "May", value: 189 },
+  //   { month: "Jun", value: 239 },
+  //   { month: "Jul", value: 349 },
+  //   { month: "Aug", value: 420 },
+  // ];
 
   return (
     <>
@@ -82,11 +180,31 @@ const HomePage = () => {
             {/* customers */}
             <div className="  ">
               <div className="flex items-center gap-2">
-                <SmallCustomerCard />
-                <SmallCustomerCard />
-                <SmallCustomerCard />
-                <SmallCustomerCard />
-                <SmallCustomerCard />
+                <SmallCustomerCard
+                  amount={23}
+                  imageUrl="/imgs/horizontal_01.jpg"
+                  name="Ali"
+                />
+                <SmallCustomerCard
+                  amount={200}
+                  imageUrl="/imgs/horizontal_02.jpg"
+                  name="Laiba"
+                />
+                <SmallCustomerCard
+                  amount={34}
+                  imageUrl="/imgs/horizontal_03.jpg"
+                  name="Zainab"
+                />
+                <SmallCustomerCard
+                  amount={23}
+                  imageUrl="/imgs/horizontal_04.jpg"
+                  name="Umair"
+                />
+                <SmallCustomerCard
+                  amount={23}
+                  imageUrl="/imgs/horizontal_05.jpg"
+                  name="Aliza"
+                />
               </div>
             </div>
           </div>
@@ -99,7 +217,9 @@ const HomePage = () => {
                 {formatedDate.day} - {formatedDate.month} - {formatedDate.year}
               </p>
               <div className="flex items-center justify-between">
-                <p className="text-3xl font-bold">$20,323.32</p>
+                <p className="text-3xl font-bold">
+                  ${allData.ordersInfo.totalEarned}
+                </p>
                 <span>
                   <ChartColumn className="text-purple-600 w-20 h-16" />
                 </span>
@@ -117,11 +237,15 @@ const HomePage = () => {
             <div className="  ">
               <p className="font-bold text-gray-400 ">
                 Total Products In Store
-                <span className="text-gray-600 ms-4">124</span>
+                <span className="text-gray-600 ms-4">
+                  {allData.totalProducts}
+                </span>
               </p>
-              <button className="border px-5 text-white font-bold py-2 rounded-xl mt-3 bg-purple-400 transition-all hover:bg-purple-500">
-                Add New Product
-              </button>
+              <Link to={"/admin/products"}>
+                <button className="border px-5 text-white font-bold py-2 rounded-xl mt-3 bg-purple-400 transition-all hover:bg-purple-500">
+                  Add New Product
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -135,7 +259,9 @@ const HomePage = () => {
                   {formatedDate.day} - {formatedDate.month} -{" "}
                   {formatedDate.year}
                 </p>
-                <p className="text-3xl font-bold">$14,920.54</p>
+                <p className="text-3xl font-bold">
+                  ${allData.ordersInfo.totalEarned}
+                </p>
               </div>
               {/*  */}
               <div className="flex items-center justify-around p-5">
@@ -143,21 +269,23 @@ const HomePage = () => {
                   <span className="text-white/80 text-sm font-semibold">
                     Cancelled
                   </span>
-                  <span className="font-bold">224</span>
+                  <span className="font-bold">
+                    {allData.ordersInfo.cancelled}
+                  </span>
                 </div>
 
                 <div className="flex flex-col  ">
                   <span className="text-white/80 text-sm font-semibold">
                     Placed
                   </span>
-                  <span className="font-bold">224</span>
+                  <span className="font-bold">{allData.ordersInfo.placed}</span>
                 </div>
                 {/*  */}
                 <div className="flex flex-col  ">
                   <span className="text-white/80 text-sm font-semibold">
                     Sold
                   </span>
-                  <span className="font-bold">224</span>
+                  <span className="font-bold">{allData.ordersInfo.sold}</span>
                 </div>
               </div>
             </div>
@@ -177,7 +305,7 @@ const HomePage = () => {
               <div className="h-[400px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                    data={linechartData}
+                    data={allData.charts.linechartData}
                     margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                   >
                     {/* Grid */}
@@ -231,7 +359,7 @@ const HomePage = () => {
                 <div className="h-[400px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
-                      data={chartData}
+                      data={allData.charts.chartData}
                       margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                       barCategoryGap="20%"
                     >

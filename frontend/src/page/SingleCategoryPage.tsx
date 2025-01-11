@@ -1,6 +1,16 @@
+import {
+  useGetCategoryWiseProducts,
+  useGetNewProducts,
+} from "@/api/productsApi";
 import Container from "@/components/Container";
 import HeroSection from "@/components/HeroSection copy";
+import LoadingProductCard from "@/components/LoadingProductCard";
 import ProductCard from "@/components/ProductCard";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 import {
   Select,
   SelectContent,
@@ -8,16 +18,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { categories } from "@/utils/constant";
+import { Product } from "@/utils/Types";
 import Autoplay from "embla-carousel-autoplay";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const SingleCategoryPage = () => {
+  const [categoryWiseProducts, setCategoryWiseProducts] = useState<Product[]>();
+  const { data: newProducts, isLoading: isNewProductsLoading } =
+    useGetNewProducts();
+  const { cat } = useParams();
+  const { data: products, isLoading } = useGetCategoryWiseProducts(
+    cat as string
+  );
+  useEffect(() => {
+    if (products && products.products) {
+      setCategoryWiseProducts(products.products);
+      console.log(products.products);
+    }
+  }, [products, cat]);
   return (
     <>
       <HeroSection
@@ -102,24 +122,37 @@ const SingleCategoryPage = () => {
         <div className="mt-10">
           <div>
             {/* category name */}
-            <strong className="text-3xl block mb-4">Headphones For You!</strong>
+            <strong className="text-3xl block mb-4">
+              {categories.find((cate) => cate.value === cat)?.text} For You!
+            </strong>
             {/* products */}
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 overflow-hidden mb-5">
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-            </div>
+
+            {isLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 overflow-hidden mb-5">
+                <LoadingProductCard />
+                <LoadingProductCard />
+                <LoadingProductCard />
+                <LoadingProductCard />
+                <LoadingProductCard />
+                <LoadingProductCard />
+              </div>
+            ) : categoryWiseProducts && categoryWiseProducts?.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 overflow-hidden mb-5">
+                {categoryWiseProducts.slice(0, 5).map((prod, idx) => (
+                  <ProductCard key={idx} product={prod} />
+                ))}
+              </div>
+            ) : (
+              <div className="p-10 text-center">
+                <p className="text-2xl italic font-bold">No products Found</p>
+              </div>
+            )}
           </div>
         </div>
-        {/* similar products */}
+        {/* Other products */}
         <div className="mt-10">
           <strong className="text-3xl block mb-4">
-            Similar Items You Might Like
+            Other Items You Might Like
           </strong>
           {/* products */}
           <Carousel
@@ -134,24 +167,39 @@ const SingleCategoryPage = () => {
             ]}
           >
             <CarouselContent>
-              <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
-                <ProductCard />
-              </CarouselItem>
-              <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
-                <ProductCard />
-              </CarouselItem>
-              <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
-                <ProductCard />
-              </CarouselItem>
-              <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
-                <ProductCard />
-              </CarouselItem>
-              <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
-                <ProductCard />
-              </CarouselItem>
-              <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
-                <ProductCard />
-              </CarouselItem>
+              {isNewProductsLoading ? (
+                <>
+                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
+                    <LoadingProductCard />
+                  </CarouselItem>
+                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
+                    <LoadingProductCard />
+                  </CarouselItem>
+                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
+                    <LoadingProductCard />
+                  </CarouselItem>
+                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
+                    <LoadingProductCard />
+                  </CarouselItem>
+                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
+                    <LoadingProductCard />
+                  </CarouselItem>
+                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/4">
+                    <LoadingProductCard />
+                  </CarouselItem>
+                </>
+              ) : (
+                newProducts &&
+                newProducts?.length > 0 &&
+                newProducts?.map((prod, idx) => (
+                  <CarouselItem
+                    className="basis-1/2 md:basis-1/3 lg:basis-1/4"
+                    key={idx}
+                  >
+                    <ProductCard product={prod} />
+                  </CarouselItem>
+                ))
+              )}
             </CarouselContent>
           </Carousel>
         </div>

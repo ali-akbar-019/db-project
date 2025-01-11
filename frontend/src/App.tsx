@@ -15,6 +15,10 @@ import AdminProductsPage from "./page/Admin/ProductsPage";
 import AdminCustomersPage from "./page/Admin/CustomersPage";
 import AdminSettingsPage from "./page/Admin/SettingsPage";
 import VisualsPage from "./page/Admin/VisualsPage";
+import AuthCallbackPage from "./page/AuthCallbackPage";
+import OrdersPage from "./page/Admin/OrdersPage";
+import FavItems from "./page/FavProductsPage";
+import DataTable from "./page/BillingPage";
 
 const App = () => {
   return (
@@ -28,6 +32,9 @@ const App = () => {
             </Layout>
           }
         />
+        {/*  */}
+        <Route path="/auth-callback" element={<AuthCallbackPage />} />
+        {/*  */}
         <Route
           path="/about"
           element={
@@ -80,8 +87,7 @@ const App = () => {
           path="/billing"
           element={
             <Layout>
-              {/* <BillingPage /> */}
-              <>billing page</>
+              <DataTable />
             </Layout>
           }
         />
@@ -119,6 +125,14 @@ const App = () => {
           }
         />
         <Route
+          path="/admin/orders"
+          element={
+            <AdminLayout>
+              <OrdersPage />
+            </AdminLayout>
+          }
+        />
+        <Route
           path="/admin/visuals"
           element={
             <AdminLayout>
@@ -132,6 +146,15 @@ const App = () => {
             <AdminLayout>
               <AdminSettingsPage />
             </AdminLayout>
+          }
+        />
+        {/*  */}
+        <Route
+          path="/fav-products"
+          element={
+            <Layout>
+              <FavItems />
+            </Layout>
           }
         />
 

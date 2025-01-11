@@ -73,7 +73,7 @@ export const useGetCurrentUserCart = () => {
     isLoading,
   } = useQuery("fetchAllCartItems", getCurrentUserCartRequest);
   if (error) {
-    toast.error("Error while fetching the cart");
+    // toast.error("Error while fetching the cart");
   }
   //
   return {
@@ -164,7 +164,7 @@ export const useDeleteFromCart = () => {
   });
   //
   if (isSuccess) {
-    toast.error("Deleted from cart successfully");
+    toast.success("Deleted from cart successfully");
     reset();
   }
   //

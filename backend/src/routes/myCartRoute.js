@@ -1,6 +1,6 @@
 import express from 'express'
-import myCartController from '../controllers/myCartController';
-import { jwtCheck, jwtParse } from '../middleware/auth';
+import myCartController from '../controllers/myCartController.js';
+import { jwtCheck, jwtParse } from '../middleware/auth.js';
 
 const router = express.Router();
 

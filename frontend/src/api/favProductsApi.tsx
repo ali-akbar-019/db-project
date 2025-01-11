@@ -82,6 +82,7 @@ export const useGetMyFavItems = () => {
     isLoading,
   };
 };
+
 export const useDeleteMyFavItems = () => {
   const { getAccessTokenSilently } = useAuth0();
   const queryClient = useQueryClient();

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -46,12 +46,21 @@ const UserProfileForm = ({
 }: Props) => {
   const form = useForm<UserFormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: currentUser,
+    defaultValues: currentUser.data,
   });
   //
+
+  // Store the previous currentUser in a ref
+  const prevUser = useRef(currentUser);
+  // console.log("current user :: ", currentUser.data);
   useEffect(() => {
-    form.reset(currentUser);
+    // Only reset the form if currentUser has actually changed
+    if (currentUser !== prevUser.current) {
+      form.reset(currentUser.data);
+      prevUser.current = currentUser; // Update the ref with the new currentUser
+    }
   }, [currentUser, form]);
+
   return (
     <Form {...form}>
       <form

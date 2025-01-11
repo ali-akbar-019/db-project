@@ -1,11 +1,15 @@
+import { useGetNewProducts } from "@/api/productsApi";
 import Container from "@/components/Container";
 import HeroSection from "@/components/HeroSection";
+import LoadingProductCard from "@/components/LoadingProductCard";
 import PopularBrands from "@/components/PopularBrands";
 import PopularCategories from "@/components/PopularCategories";
-import PopularProductCard from "@/components/PopularProductCard";
 import PopularProducts from "@/components/PopularProducts";
+import ProductCard from "@/components/ProductCard";
 
 const HomePage = () => {
+  const { data: newProducts, isLoading: isNewProductsLoading } =
+    useGetNewProducts();
   return (
     <>
       <Container className="pt-5">
@@ -17,7 +21,7 @@ const HomePage = () => {
         {/* popular categories */}
         <PopularCategories />
         {/* single product */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-20 h-[550px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-20 h-[550px]">
           <div className="h-full overflow-hidden rounded-xl">
             <img
               src="/imgs/horizontal_05.jpg"
@@ -26,13 +30,28 @@ const HomePage = () => {
             />
           </div>
           <div className="flex flex-col justify-between">
-            <div className="flex  gap-2">
-              <div>
-                <PopularProductCard />
-              </div>
-              <div>
-                <PopularProductCard />
-              </div>
+            <div className="flex  gap-4">
+              {isNewProductsLoading ? (
+                <>
+                  <div>
+                    <LoadingProductCard />
+                  </div>
+                  <div>
+                    <LoadingProductCard />
+                  </div>
+                </>
+              ) : (
+                newProducts &&
+                newProducts?.length > 0 && (
+                  <>
+                    {newProducts.slice(0, 3).map((prod, idx) => (
+                      <div key={idx}>
+                        <ProductCard product={prod} className="" />
+                      </div>
+                    ))}
+                  </>
+                )
+              )}
             </div>
             <div className="max-w-lg">
               <strong>S/S 2024 collection</strong>

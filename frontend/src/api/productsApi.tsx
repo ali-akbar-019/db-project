@@ -1,3 +1,4 @@
+import { Product } from "@/utils/Types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "sonner";
@@ -10,7 +11,7 @@ export const useCreateNewProduct = () => {
   //
   const createNewProductRequest = async (newProduct: any) => {
     const accessToken = await getAccessTokenSilently();
-    const res = await fetch(`${API_BASE_URL}/api/product`, {
+    const res = await fetch(`${API_BASE_URL}/api/products`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -25,7 +26,7 @@ export const useCreateNewProduct = () => {
   };
   //
   const {
-    mutateAsync: createProduct,
+    mutateAsync: addNewProduct,
     error,
     reset,
     isSuccess,
@@ -46,43 +47,95 @@ export const useCreateNewProduct = () => {
   }
   //
   return {
-    createProduct,
+    addNewProduct,
     isLoading,
   };
   //
 };
 
-export const useGetAllProduct = () => {
-  const { getAccessTokenSilently } = useAuth0();
+export const useGetAllProducts = () => {
   const getAllProductsRequest = async () => {
-    const accessToken = await getAccessTokenSilently();
     const res = await fetch(`${API_BASE_URL}/api/products`, {
       method: "GET",
+    });
+    if (!res.ok) {
+      throw new Error("Error while fetching the products");
+    }
+    return res.json();
+  };
+  //
+  const { data, isLoading, error } = useQuery(
+    "fetchAllProducts",
+    getAllProductsRequest
+  );
+  if (error) {
+    toast.error("Error while fetching the products ");
+  }
+  //
+  return {
+    data,
+    isLoading,
+  };
+};
+export const useGetNewProducts = () => {
+  const getNewProducts = async (): Promise<Product[]> => {
+    const res = await fetch(`${API_BASE_URL}/api/products/new-products`, {
+      method: "GET",
       headers: {
-        Authorization: `Bearer ${accessToken}`,
         "content-type": "application/json",
       },
     });
     if (!res.ok) {
       throw new Error("Error while fetching the products");
     }
+    return res.json();
   };
   //
-  const {
-    data: allProducts,
-    isLoading,
-    error,
-  } = useQuery("fetchAlProducts", getAllProductsRequest);
+  const { data, isLoading, error } = useQuery(
+    "fetchNewProducts",
+    getNewProducts
+  );
   if (error) {
     toast.error("Error while fetching the products ");
   }
   //
   return {
-    allProducts,
+    data,
     isLoading,
   };
 };
+//
 
+export const useGetCategoryWiseProducts = (category: string) => {
+  const getCategoryWiseProductsRequest = async () => {
+    const res = await fetch(
+      `${API_BASE_URL}/api/products/get-category-wise-products?category=${category}`,
+      {
+        method: "GET",
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Error while fetching the products");
+    }
+
+    return res.json();
+  };
+
+  const { data, isLoading, error } = useQuery(
+    ["category-wise-products", category],
+    getCategoryWiseProductsRequest
+  );
+
+  if (error) {
+    toast.error("Error while fetching the products");
+  }
+
+  return {
+    data,
+    isLoading,
+  };
+};
 //
 export const useUpdateProduct = () => {
   const { getAccessTokenSilently } = useAuth0();
@@ -109,6 +162,8 @@ export const useUpdateProduct = () => {
     mutateAsync: updateProduct,
     error,
     isLoading,
+    isSuccess,
+    reset,
   } = useMutation(updateProductRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries("fetchAllProducts");
@@ -117,6 +172,11 @@ export const useUpdateProduct = () => {
   //
   if (error) {
     toast.error("Error while fetching the products");
+    reset();
+  }
+  if (isSuccess) {
+    toast.success("Product Updated Successfully");
+    reset();
   }
   return {
     isLoading,
@@ -166,19 +226,9 @@ export const useDeleteProduct = () => {
   };
 };
 export const useGetSingleProduct = (id: string) => {
-  const { getAccessTokenSilently } = useAuth0();
-  const getSingleProductRequest = async () => {
-    const accessToken = await getAccessTokenSilently();
-    const res = await fetch(`${API_BASE_URL}/api/products`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-      }),
-    });
+  const getSingleProductRequest = async (): Promise<Product> => {
+    const res = await fetch(`${API_BASE_URL}/api/products/${parseInt(id)}`);
+    return await res.json();
   };
   const { data: singleProduct, isLoading } = useQuery(
     ["singleProduct", id],

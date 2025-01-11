@@ -1,0 +1,60 @@
+i want this type of data-> const chartData = [
+    { range: "0-10", frequency: 20 },
+    { range: "10-20", frequency: 45 },
+    { range: "20-30", frequency: 35 },
+    { range: "30-40", frequency: 60 },
+    { range: "40-50", frequency: 50 },
+    { range: "50-60", frequency: 30 },
+  ]; from 
+model Order {
+  id              Int         @id @default(autoincrement())
+  userId          Int
+  user            User        @relation(fields: [userId], references: [id])
+  deliveryDetails Json // Delivery details stored as JSON
+  cartItems       CartItem[]
+  totalAmount     Float       @default(0.0)
+  status          OrderStatus @default(PLACED)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+} model CartItem {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  userId    Int
+  productId Int
+  quantity  Int
+  Order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+} useEffect(() => {
+    if (!allProductsLoading || !ordersLoading || !orders || !allProducts) {
+      //
+      setAllData((prev) => {
+        return {
+          totalProducts: allProducts.length,
+          ordersInfo: {
+            totalOrders: orders.lenght,
+            totalEarned: orders.reduce((prev, curr) => {
+              return prev + curr.totalAmount;
+            }, 0),
+            cancelled: orders.filter((or) => or.status == "CANCELLED")?.length,
+            placed: orders.filter((or) => or.status == "PLACED")?.length,
+            sold: orders.filter((or) => or.status == "PAID")?.length,
+          },
+          charts:{
+            chartData:
+          }
+        };
+      });
+    }
+  }, [orders, allProducts]); const linechartData = [
+    { month: "Jan", value: 400 },
+    { month: "Feb", value: 300 },
+    { month: "Mar", value: 200 },
+    { month: "Apr", value: 278 },
+    { month: "May", value: 189 },
+    { month: "Jun", value: 239 },
+    { month: "Jul", value: 349 },
+    { month: "Aug", value: 420 },
+  ];

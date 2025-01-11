@@ -1,5 +1,7 @@
+import { useGetAllProducts } from "@/api/productsApi";
 import Container from "@/components/Container";
 import HeroSection from "@/components/HeroSection copy";
+import LoadingProductCard from "@/components/LoadingProductCard";
 import ProductCard from "@/components/ProductCard";
 import {
   Select,
@@ -8,8 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { categories } from "@/utils/constant";
 
 const ProductsPage = () => {
+  const { data: allProducts, isLoading } = useGetAllProducts();
+  console.log("all products :: ", allProducts);
   return (
     <>
       <HeroSection
@@ -90,41 +95,54 @@ const ProductsPage = () => {
             </Select>
           </div>
         </div>
-        {/* products */}
-        <div className="mt-10">
-          <div>
-            {/* category name */}
-            <strong className="text-3xl block mb-4">Headphones For You!</strong>
-            {/* products */}
+        {isLoading ? (
+          <div className="mt-10">
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 overflow-hidden mb-5">
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
+              <LoadingProductCard />
+              <LoadingProductCard />
+              <LoadingProductCard />
+              <LoadingProductCard />
+              <LoadingProductCard />
+              <LoadingProductCard />
+              <LoadingProductCard />
+              <LoadingProductCard />
             </div>
           </div>
-        </div>
-        <div className="mt-10">
-          <div>
-            {/* category name */}
-            <strong className="text-3xl block mb-4">Furniture For You!</strong>
-            {/* products */}
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 overflow-hidden mb-5">
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
-            </div>
+        ) : (
+          <div className="mt-10">
+            {categories.map((cat, catIndex) => {
+              return (
+                <div key={catIndex}>
+                  {/* category name */}
+                  <strong className="text-3xl block mb-4">
+                    {cat.text} For You!
+                  </strong>
+                  {/* products */}
+                  {allProducts &&
+                  allProducts?.products &&
+                  allProducts?.products.length > 0 &&
+                  allProducts?.products.find(
+                    // @ts-ignore
+                    (prod) => prod.category == cat.value
+                  ) ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 overflow-hidden mb-5">
+                      {/* @ts-ignore */}
+                      {allProducts.products.map((prod, idx) => (
+                        <ProductCard key={idx} product={prod} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-10 text-center">
+                      <p className="text-2xl italic font-bold">
+                        No products Found
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        </div>
+        )}
       </Container>
     </>
   );

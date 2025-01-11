@@ -11,6 +11,8 @@ const Auth0ProviderWithNavigate = ({ children }: Props) => {
   const domain = import.meta.env.VITE_AUTH0_DOMAIN;
   const clientId = import.meta.env.VITE_AUTO0_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_AUTH0_CALLBACK_URL;
+  // const audience = import.meta.env.VITE_AUTH0_AUDIENCE ;
+  const audience = "db-project-api";
   if (!domain || !clientId || !redirectUri) {
     throw new Error("Unable to initliase Auth");
   }
@@ -24,6 +26,7 @@ const Auth0ProviderWithNavigate = ({ children }: Props) => {
       clientId={clientId}
       authorizationParams={{
         redirect_uri: redirectUri,
+        audience,
       }}
       onRedirectCallback={onRedirectCallback}
     >

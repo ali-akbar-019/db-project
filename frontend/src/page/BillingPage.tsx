@@ -1,4 +1,4 @@
-import react, { useState, useEffect } from "react";
+// @ts-nocheck
 import { CaretSortIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
@@ -13,7 +13,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import * as React from "react";
+import { useEffect, useState } from "react";
 
+import { useGetCurrentUserOrders } from "@/api/orderApi";
+import Container from "@/components/Container";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,16 +33,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Order } from "@/utils/Types";
 import { CheckCircle, Clock, Loader2, XCircle } from "lucide-react";
-import { useGetCurrentUserOrders } from "@/api/OrdersApi";
-import { Order } from "@/Types";
 
 type allStatus =
-  | "placed"
-  | "paid"
-  | "inProgress"
-  | "outForDelivery"
-  | "delivered";
+  | "PLACED"
+  | "PAID"
+  | "IN_PROGRESS"
+  | "OUT_FOR_DELIVERY"
+  | "DELIVERED";
 
 const columns: ColumnDef<Order>[] = [
   {
@@ -49,34 +51,34 @@ const columns: ColumnDef<Order>[] = [
       const status: allStatus = row.getValue("status");
 
       const statusStyles = {
-        placed: {
+        PLACED: {
           bg: "bg-yellow-500",
           text: "text-yellow-600",
           icon: <Clock className="animate-pulse" />,
         },
-        inProgress: {
+        IN_PROGRESS: {
           bg: "bg-blue-500",
           text: "text-blue-600",
           icon: <Loader2 className="animate-spin" />,
         },
-        paid: {
+        PAID: {
           bg: "bg-green-500",
           text: "text-green-600",
           icon: <CheckCircle />,
         },
-        delivered: {
+        DELIVERED: {
           bg: "bg-green-500",
           text: "text-green-600",
           icon: <CheckCircle />,
         },
-        outForDelivery: {
+        OUT_FOR_DELIVERY: {
           bg: "bg-red-500",
           text: "text-red-600",
           icon: <XCircle />,
         },
       };
 
-      const currentStyle = statusStyles[status] || statusStyles["placed"];
+      const currentStyle = statusStyles[status] || statusStyles["PLACED"];
 
       return (
         <div
@@ -159,7 +161,7 @@ function DataTable() {
     }
     setData(currUserOrders);
   }, [currUserOrders]);
-
+  console.log("Current user order :: ", data);
   useEffect(() => {
     if (currUserOrders) {
       const total = currUserOrders.reduce((prevVal, currVal) => {
@@ -197,8 +199,14 @@ function DataTable() {
   });
 
   return (
-    <>
-      <div className="container w-full mx-auto p-4 shadow">
+    <Container>
+      <div className="mt-10 mb-10">
+        <h3 className="text-center text-2xl font-semibold text-gray-800 tracking-wide border-b-2 border-gray-300 inline-block pb-2">
+          My Orders
+        </h3>
+      </div>
+
+      <div className="container w-full mx-auto p-4 shadow mb-20">
         {/* Filter and Column Selector */}
         <div className="flex items-center justify-between py-4">
           <Input
@@ -322,7 +330,7 @@ function DataTable() {
       </div>
 
       {/* tatal spend */}
-    </>
+    </Container>
   );
 }
 
