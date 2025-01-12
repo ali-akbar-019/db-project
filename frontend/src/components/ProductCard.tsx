@@ -42,7 +42,10 @@ const ProductCard = ({
             <Loader2 className="w-5 h-5 text-gray-600 animate-spin transition-all" />
           </span>
         ) : (
-          <span className="bg-gray-100 absolute top-3 right-5 p-2 rounded-full flex items-center justify-center cursor-pointer" onClick={async()=>await addToFav({productId:product.id})}>
+          <span
+            className="bg-gray-100 absolute top-3 right-5 p-2 rounded-full flex items-center justify-center cursor-pointer"
+            onClick={async () => await addToFav({ productId: product.id })}
+          >
             <Heart className="w-5 h-5 text-gray-600" />
           </span>
         )}
@@ -56,7 +59,7 @@ const ProductCard = ({
             ${product.discountPrice}
           </span>
         </div>
-        <p className="font-bold text-gray-900">{product.name}</p>
+        <p className="font-bold text-gray-900 line-clamp-1">{product.name}</p>
         <div className="flex items-center justify-between">
           <small className="text-gray-500">{product.brand}</small>
           <small className="text-gray-500 flex gap-1 items-center cursor-auto">

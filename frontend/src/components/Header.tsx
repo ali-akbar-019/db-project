@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,7 +7,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Heart, Loader2, Search, ShoppingCart } from "lucide-react";
+import {
+  AlignJustify,
+  Heart,
+  Loader2,
+  Search,
+  ShoppingCart,
+} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 //
@@ -30,6 +37,16 @@ import { useCreateNewOrder } from "@/api/orderApi";
 import { CheckoutSessionData } from "@/utils/Types";
 import { useGetMyUser } from "@/api/MyUserApi";
 import { toast } from "sonner";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 const Header = () => {
   //
@@ -40,7 +57,7 @@ const Header = () => {
   const { createCheckoutSession, isLoading: isCheckoutLoading } =
     useCreateNewOrder();
 
-  console.log("cart data :: ", cartData);
+  // console.log("cart data :: ", cartData);
   // @ts-ignore
   const { markCartItemsOrdered } = useMarkOrderedFromCart();
   const { currentUser } = useGetMyUser();
@@ -67,7 +84,6 @@ const Header = () => {
       url: "/contact",
     },
   ];
-
   //
   const onCheckout = async () => {
     if (!cartData || !totalPrice || !currentUser) {
@@ -124,7 +140,7 @@ const Header = () => {
   return (
     <header className="shadow-sm">
       <nav className="flex items-center justify-between p-5 px-10 md:px-20 lg:px-24">
-        <div className="space-x-5 text-sm font-semibold">
+        <div className="space-x-5 text-sm font-semibold md:block hidden">
           {link.map((singleLink, index) => (
             <Link key={index} to={singleLink.url}>
               {singleLink.name}
@@ -230,10 +246,36 @@ const Header = () => {
               </SheetHeader>
             </SheetContent>
           </Sheet>
+          {/* small nav */}
+          <Drawer>
+            <DrawerTrigger className="block md:hidden">
+              <AlignJustify />
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Shope Ease</DrawerTitle>
+              </DrawerHeader>
+              <DrawerFooter>
+                {/*  */}
+                <div className="text-sm font-semibold  mb-4 flex flex-col justify-center gap-2 items-center">
+                  {link.map((singleLink, index) => (
+                    <Link key={index} to={singleLink.url}>
+                      {singleLink.name}
+                    </Link>
+                  ))}
+                </div>
+                {/*  */}
+                <DrawerClose>
+                  <Button variant="outline">Close</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+          {/* small nav ends here */}
 
           {isAuthenticated ? (
             <DropdownMenu>
-              <DropdownMenuTrigger className="">
+              <DropdownMenuTrigger className="hidden md:block">
                 <Avatar className="w-8 h-8 ">
                   <AvatarImage
                     src={
@@ -255,7 +297,8 @@ const Header = () => {
                 <DropdownMenuItem>
                   <Link to={"/billing"}>Billing</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                {/* admin pannel just for the big screens */}
+                <DropdownMenuItem className="hidden lg:block">
                   <Link to={"/admin"}>Admin</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>

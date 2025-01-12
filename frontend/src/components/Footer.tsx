@@ -2,10 +2,10 @@ import { Facebook, Instagram, Linkedin, Twitch, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className=" border-t px-10">
+    <footer className="border-t px-5 md:px-10">
       {/* top */}
-      <div className="grid grid-cols-3 pt-10 pb-5 gap-10">
-        <div className="col-span-2 flex gap-32">
+      <div className="grid grid-cols-1 md:grid-cols-3 pt-10 pb-5 gap-10">
+        <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-10 md:gap-32">
           <div>
             <strong className="text-gray-500">Company</strong>
             <ul className="space-y-2 mt-2">
@@ -27,14 +27,13 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            {" "}
             <strong className="text-gray-500">For customer</strong>
             <ul className="space-y-2 mt-2">
               <li className="font-semibold text-sm text-gray-800 transition hover:text-gray-950 cursor-pointer">
                 Contact us
               </li>
               <li className="font-semibold text-sm text-gray-800 transition hover:text-gray-950 cursor-pointer">
-                Retur
+                Return
               </li>
               <li className="font-semibold text-sm text-gray-800 transition hover:text-gray-950 cursor-pointer">
                 How to pay?
@@ -49,7 +48,6 @@ const Footer = () => {
           </div>
 
           <div>
-            {" "}
             <strong className="text-gray-500">Partners</strong>
             <ul className="space-y-2 mt-2">
               <li className="font-semibold text-sm text-gray-800 transition hover:text-gray-950 cursor-pointer">
@@ -70,35 +68,35 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className=" flex items-center justify-center">
+        <div className="flex items-center justify-center">
           <div>
             <img
               src="/download_01.png"
               alt="download image"
-              className="w-full h-full object-cover max-w-[250px]"
+              className="w-full h-auto max-w-[250px]"
             />
           </div>
         </div>
       </div>
       {/* down */}
-      <div className="flex items-center justify-between py-5 border-t">
-        <div className="text-gray-500 font-bold">
+      <div className="flex flex-col md:flex-row items-center justify-between py-5 border-t">
+        <div className="text-gray-500 font-bold mb-4 md:mb-0">
           &copy; {new Date().getFullYear()}
         </div>
-        <div className="flex items-center gap-3">
-          <span className="bg-gray-950 p-2 rounded-full flex items-center justify-center ">
+        <div className="flex items-center gap-3 mb-4 md:mb-0">
+          <span className="bg-gray-950 p-2 rounded-full flex items-center justify-center">
             <Facebook className="text-white w-5 h-5" />
           </span>
-          <span className="bg-gray-950 p-2 rounded-full flex items-center justify-center ">
+          <span className="bg-gray-950 p-2 rounded-full flex items-center justify-center">
             <Instagram className="text-white w-5 h-5" />
           </span>
-          <span className="bg-gray-950 p-2 rounded-full flex items-center justify-center ">
+          <span className="bg-gray-950 p-2 rounded-full flex items-center justify-center">
             <Youtube className="text-white w-5 h-5" />
           </span>
-          <span className="bg-gray-950 p-2 rounded-full flex items-center justify-center ">
+          <span className="bg-gray-950 p-2 rounded-full flex items-center justify-center">
             <Twitch className="text-white w-5 h-5" />
           </span>
-          <span className="bg-gray-950 p-2 rounded-full flex items-center justify-center ">
+          <span className="bg-gray-950 p-2 rounded-full flex items-center justify-center">
             <Linkedin className="text-white w-5 h-5" />
           </span>
         </div>

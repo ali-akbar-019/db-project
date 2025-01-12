@@ -7,7 +7,7 @@ const Categories = () => {
   return (
     <>
       <HeroSection
-        image="/imgs/horizontal_02.jpg"
+        image="/imgs/pic_10.jpg"
         desc="Explore our curated collection of categories that cater to your unique style and preferences. From elegant rings to trendy chains, each category showcases our dedication to quality and design. Discover the perfect piece to express your individuality."
         title="Browse Our Categories"
         buttonText="Shop Now"

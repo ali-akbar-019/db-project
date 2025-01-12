@@ -28,21 +28,28 @@ const HeroSection = () => {
           <CarouselContent>
             <CarouselItem>
               <img
-                src="/imgs/horizontal_01.jpg"
+                src="/imgs/pic_05.jpg"
                 alt="banner image"
                 className="w-full h-full object-cover"
               />
             </CarouselItem>
             <CarouselItem>
               <img
-                src="/imgs/horizontal_04.jpg"
+                src="/imgs/pic_07.jpg"
                 alt="banner image"
                 className="w-full h-full object-cover"
               />
             </CarouselItem>
             <CarouselItem>
               <img
-                src="/imgs/horizontal_03.jpg"
+                src="/imgs/pic_10.jpg"
+                alt="banner image"
+                className="w-full h-full object-cover"
+              />
+            </CarouselItem>
+            <CarouselItem>
+              <img
+                src="/imgs/pic_11.jpg"
                 alt="banner image"
                 className="w-full h-full object-cover"
               />

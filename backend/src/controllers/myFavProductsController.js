@@ -36,29 +36,46 @@ const getAllFavProducts = async (req, res) => {
 const addFavProduct = async (req, res) => {
     try {
         const userId = req.userId;
-        ///
-        const product = await prisma.fav.create({
-            data:
-            {
+        const { productId } = req.body; // Assuming the product ID is sent in the request body
+
+        // Check if the product is already in the user's favorites
+        const existingProduct = await prisma.fav.findFirst({
+            where: {
                 userId: parseInt(userId),
+                productId: productId // Match the productId
+            }
+        });
+
+        if (existingProduct) {
+            return res.status(400).json({
+                message: "Product already in favorites"
+            });
+        }
+
+        // If the product is not in the favorites, add it
+        const product = await prisma.fav.create({
+            data: {
+                userId: parseInt(userId),
+                productId: productId, // Assuming productId is provided in the body
                 ...req.body
             }
-        })
-        // 
+        });
+
         if (!product) {
             return res.status(404).json({
                 message: "Product not found"
-            })
+            });
         }
-        //
-        return res.status(201).json(product)
+
+        return res.status(201).json(product);
     } catch (error) {
         console.log("Error while adding the fav product ", error.toString());
         return res.status(500).json({
-            message: "Error while adding to the fav product "
-        })
+            message: "Error while adding to the fav product"
+        });
     }
-}
+};
+
 // 
 const removeFromFav = async (req, res) => {
     try {

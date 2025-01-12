@@ -59,6 +59,12 @@ const createProducts = async (req, res) => {
             });
         }
 
+        // Log the query being executed
+        prisma.$on('query', (e) => {
+            console.log("Query being executed:", e.query);
+            console.log("Query Parameters:", e.params);
+            console.log("Duration:", e.duration);
+        });
         // Create the product first
         const product = await prisma.product.create({
             data: {

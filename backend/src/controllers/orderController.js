@@ -23,7 +23,6 @@ const addOrder = async (req, res) => {
     try {
         const { cartItems, deliveryDetails, totalAmount, status } = req.body;
 
-        // Create a new order without creating new cartItems
         const order = await prisma.order.create({
             data: {
                 userId: parseInt(req.userId),
@@ -41,8 +40,8 @@ const addOrder = async (req, res) => {
         // Mark cart items as ordered
         await prisma.cartItem.updateMany({
             where: {
-                userId: cartItems[0].userId,  // Assuming all cart items are from the same user
-                id: { in: cartItems.map(item => item.id) },  // Target only the ordered items
+                userId: cartItems[0].userId,
+                id: { in: cartItems.map(item => item.id) },
             },
             data: {
                 isOrdered: true,  // Mark them as ordered
@@ -190,7 +189,7 @@ const markAllCartItemsOrdered = async (req, res) => {
         console.error("Error while Updating the cart", error);
         return res.status(500).json({
             message: "Something went wrong while Updating cart items",
-            error: error, // Add the error message for better debugging
+            error: error,
         });
     }
 };

@@ -58,7 +58,7 @@ const ContactUs = () => {
     <>
       {/* banner image */}
       <HeroSection
-        image="/imgs/horizontal_03.jpg"
+        image="/imgs/pic_09.jpg"
         desc="   Whether you have a question about our services, need assistance, or just want to chat, feel free to reach out! Our team is here to help you with anything you need."
         title="We’d Love to Hear From You"
         buttonText="Get In Touch"

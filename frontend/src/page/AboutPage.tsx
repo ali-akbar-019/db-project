@@ -87,7 +87,7 @@ const AboutUsPage = () => {
               className="overflow-hidden w-full"
             >
               <img
-                src="/imgs/horizontal_02.jpg"
+                src="/imgs/pic_09.jpg"
                 alt="Quality Assurance"
                 className="w-full h-full object-cover"
               />

@@ -91,24 +91,6 @@ model Fav {
   product   Product @relation(fields: [productId], references: [id])
 }
 
-// enum Category {
-//   ELECTRONICS
-//   FASHION
-//   HOME_APPLIANCES
-//   BOOKS
-//   BEAUTY
-//   SPORTS
-//   TOYS
-//   GROCERIES
-//   AUTOMOTIVE
-//   PET_SUPPLIES
-//   HEALTH
-//   JEWELRY
-//   OFFICE_SUPPLIES
-//   OUTDOOR
-//   GARDENING
-// }
-
 enum Gender {
   MALE
   FEMALE

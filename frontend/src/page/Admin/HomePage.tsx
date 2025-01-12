@@ -133,7 +133,6 @@ const HomePage = () => {
       };
     });
     //
-    // console.log(formatedDate);
   }, [date.day]);
   //
   if (formatedDate.year === "") {
@@ -147,27 +146,6 @@ const HomePage = () => {
     });
     //
   }
-  console.log("charts :: ", allData.charts);
-  // //
-  // const chartData = [
-  //   { range: "0-10", frequency: 20 },
-  //   { range: "10-20", frequency: 45 },
-  //   { range: "20-30", frequency: 35 },
-  //   { range: "30-40", frequency: 60 },
-  //   { range: "40-50", frequency: 50 },
-  //   { range: "50-60", frequency: 30 },
-  // ];
-
-  // const linechartData = [
-  //   { month: "Jan", value: 400 },
-  //   { month: "Feb", value: 300 },
-  //   { month: "Mar", value: 200 },
-  //   { month: "Apr", value: 278 },
-  //   { month: "May", value: 189 },
-  //   { month: "Jun", value: 239 },
-  //   { month: "Jul", value: 349 },
-  //   { month: "Aug", value: 420 },
-  // ];
 
   return (
     <>

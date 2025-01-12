@@ -75,7 +75,7 @@ const useGetMyUser = () => {
   } = useQuery("fetchCurrentUser", getMyUserRequest);
 
   if (error) {
-    toast.error(error.toString());
+    // toast.error(error.toString());
   }
 
   return {
